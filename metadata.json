@@ -1,0 +1,6 @@
+{
+  "name": "Fit Base Fitness Center",
+  "description": "Premium fitness gym on East Canal Road, Faisalabad offering strength training, weight loss, personal training, and modern air-conditioned equipment. Open daily 6 AM to 12 AM.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
