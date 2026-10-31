@@ -97,6 +97,28 @@ export const TrainersPage: React.FC<TrainersPageProps> = ({ onOpenTrainer, onOpe
     return () => observer.disconnect();
   }, []);
 
+  const useInView = (options?: IntersectionObserverInit) => {
+    const [ref, setRef] = useState<HTMLElement | null>(null);
+    const [inView, setInView] = useState(false);
+
+    useEffect(() => {
+      if (!ref || typeof window === 'undefined') return;
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      }, { threshold: 0.25, ...options });
+
+      observer.observe(ref);
+      return () => observer.disconnect();
+    }, [ref]);
+
+    return [setRef, inView] as const;
+  };
+
+  const [roadmapRef, roadmapInView] = useInView();
+
   return (
     <div className="space-y-0">
       {/* Atmospheric CTA Hero */}
@@ -209,9 +231,13 @@ export const TrainersPage: React.FC<TrainersPageProps> = ({ onOpenTrainer, onOpe
       </section>
 
       {/* 4-Step Coaching Journey */}
-      <section className="py-20 sm:py-28 bg-[#0a0c13] border-t border-zinc-850">
+      <section ref={roadmapRef} className="py-20 sm:py-28 bg-[#0a0c13] border-t border-zinc-850 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div
+            className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              shouldReduceMotion || roadmapInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
             <span className="px-3.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase inline-block mb-3">
               THE ROADMAP
             </span>
@@ -223,38 +249,70 @@ export const TrainersPage: React.FC<TrainersPageProps> = ({ onOpenTrainer, onOpe
             </p>
           </div>
 
+          {/* Cyan progress line with dot */}
+          <div className="relative mb-10 hidden lg:block">
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-zinc-800 rounded-full" />
+            <div
+              className={`absolute top-0 left-0 h-[2px] bg-cyan-400 rounded-full transition-all ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                shouldReduceMotion || roadmapInView ? 'w-full duration-1200' : 'w-0 duration-0'
+              }`}
+            >
+              <div className="absolute right-0 -top-1 w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.8)]" />
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {transformationSteps.map((step, idx) => (
-              <div
-                key={idx}
-                className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 relative space-y-3"
-              >
-                <div className="text-4xl font-black font-heading text-cyan-400/30">
-                  {step.step}
+            {transformationSteps.map((step, idx) => {
+              const delay = shouldReduceMotion ? 0 : idx * 120;
+              return (
+                <div
+                  key={idx}
+                  style={{ transitionDelay: `${delay}ms` }}
+                  className={`p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 relative space-y-3 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] [@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:border-cyan-400 [@media(hover:hover)]:hover:shadow-xl [@media(hover:hover)]:hover:shadow-cyan-500/20 ${
+                    shouldReduceMotion || roadmapInView
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-10'
+                  }`}
+                >
+                  <div
+                    className={`text-4xl font-black font-heading text-cyan-400/30 transition-all duration-700 ${
+                      shouldReduceMotion || roadmapInView
+                        ? 'opacity-100 scale-100 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]'
+                        : 'opacity-0 scale-90'
+                    }`}
+                    style={{ transitionDelay: `${delay + 150}ms` }}
+                  >
+                    {step.step}
+                  </div>
+                  <h3 className="text-lg font-bold font-heading text-white uppercase">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                    {step.desc}
+                  </p>
                 </div>
-                <h3 className="text-lg font-bold font-heading text-white uppercase">
-                  {step.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                  {step.desc}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Primary: Join Now & Secondary: Call Now */}
           <div className="mt-16 flex flex-wrap items-center justify-center gap-4">
-            <button
-              onClick={() => onOpenJoin('Personal Training')}
-              className="px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-extrabold text-sm hover:bg-cyan-300 shadow-xl shadow-cyan-500/25 transition-all cursor-pointer"
-            >
-              Join Now
-            </button>
+            <div className="relative">
+              {!shouldReduceMotion && (
+                <span className="absolute -inset-1 rounded-xl bg-cyan-400/30 animate-ping pointer-events-none" />
+              )}
+              <button
+                onClick={() => onOpenJoin('Personal Training')}
+                className="relative px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-extrabold text-sm hover:bg-cyan-300 hover:scale-105 active:scale-95 shadow-xl shadow-cyan-500/25 transition-all duration-300 cursor-pointer"
+              >
+                Join Now
+              </button>
+            </div>
             <a
               href={`tel:${GYM_INFO.phoneRaw}`}
-              className="px-8 py-3.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-bold text-sm hover:border-cyan-400 transition-colors flex items-center gap-2"
+              className="px-8 py-3.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-bold text-sm hover:border-cyan-400 hover:text-white transition-all duration-300 flex items-center gap-2 group"
             >
-              <Phone className="w-4 h-4 text-cyan-400" />
+              <Phone className="w-4 h-4 text-cyan-400 group-hover:animate-bounce" />
               <span>Call Now</span>
             </a>
           </div>

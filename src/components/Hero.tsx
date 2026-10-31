@@ -188,15 +188,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenJoin }) => {
             <ChevronRight className="w-5 h-5 group-hover:translate-x-[3px] transition-transform duration-200 relative z-10" />
           </button>
 
-          {/* Secondary CTA */}
-          <a
-            href={`tel:${GYM_INFO.phoneRaw}`}
-            className="w-full sm:w-auto px-7 py-4 rounded-xl text-base font-bold text-zinc-200 hover:text-white bg-zinc-900/80 hover:bg-zinc-800/90 border border-zinc-700/80 hover:border-cyan-500/50 shadow-lg backdrop-blur-md transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
-            id="hero-call-now-btn"
+          {/* Secondary CTA: Book Free Trial */}
+          <button
+            onClick={() => onOpenJoin('Free Trial')}
+            className="w-full sm:w-auto px-7 py-4 rounded-xl text-base font-bold text-zinc-200 hover:text-white bg-zinc-900/80 hover:bg-zinc-800/90 border border-zinc-700/80 hover:border-cyan-500/50 shadow-lg backdrop-blur-md transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer"
+            id="hero-free-trial-btn"
           >
-            <Phone className="w-5 h-5 text-cyan-400" />
-            <span>CALL NOW</span>
-          </a>
+            <span>BOOK FREE TRIAL</span>
+          </button>
         </motion.div>
 
         {/* Canonical Single Stats Row in Hero: staggered entrance + count-up */}

@@ -17,6 +17,7 @@ import { CalculatorPage } from './pages/CalculatorPage';
 import { ReviewsPage } from './pages/ReviewsPage';
 import { LocationPage } from './pages/LocationPage';
 import { ContactPage } from './pages/ContactPage';
+import { PricingPage } from './pages/PricingPage';
 
 // Modals
 import { JoinModal } from './components/Modals/JoinModal';
@@ -103,12 +104,7 @@ function AnimatedAppContent({
         />
         <Route
           path="/reviews"
-          element={
-            <ReviewsPage
-              onOpenReviewsModal={() => setReviewsModalOpen(true)}
-              onOpenJoin={handleOpenJoin}
-            />
-          }
+          element={<ReviewsPage onOpenJoin={handleOpenJoin} />}
         />
         <Route
           path="/location"
@@ -118,6 +114,10 @@ function AnimatedAppContent({
               onOpenJoin={handleOpenJoin}
             />
           }
+        />
+        <Route
+          path="/pricing"
+          element={<PricingPage onOpenJoin={handleOpenJoin} />}
         />
         <Route
           path="/contact"

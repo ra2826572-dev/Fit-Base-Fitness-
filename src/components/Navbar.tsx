@@ -74,13 +74,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navLinks = [
     { name: 'Home', to: '/', icon: Dumbbell },
-    { name: 'About', to: '/about', icon: Info },
-    { name: 'Facilities', to: '/facilities', icon: Layers },
     { name: 'Programs', to: '/programs', icon: Flame },
     { name: 'Trainers', to: '/trainers', icon: Users },
-    { name: 'Calculator', to: '/calculator', icon: Calculator },
+    { name: 'Pricing', to: '/pricing', icon: Star },
     { name: 'Reviews', to: '/reviews', icon: Star },
-    { name: 'Location', to: '/location', icon: MapPin },
     { name: 'Contact', to: '/contact', icon: Mail },
   ];
 
