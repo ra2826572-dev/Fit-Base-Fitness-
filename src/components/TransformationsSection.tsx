@@ -31,6 +31,8 @@ export const TransformationsSection: React.FC = () => {
       badge: 'STRENGTH & TONE',
       image: '/public/assets/aistudio/image_16de5c78.png',
       isRealPhoto: true,
+      objectPosition: '50% 20%',
+      altText: 'Fit Base member after 5 months of strength and tone training',
     },
   ];
 
