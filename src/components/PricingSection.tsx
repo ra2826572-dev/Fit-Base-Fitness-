@@ -16,21 +16,21 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onOpenJoin }) =>
     {
       name: 'Monthly Plan',
       duration: '1 Month',
-      price: 'Rs. XXXX',
-      badge: 'Starter',
+      price: '4,500',
+      monthlyPrice: null,
+      badge: null,
       popular: false,
       features: [
         'Full gym floor access',
         'Locker & hot shower facility',
-        'Standard equipment usage',
-        'Open daily 6 AM – 12 AM',
       ],
     },
     {
       name: 'Quarterly Plan',
       duration: '3 Months',
-      price: 'Rs. XXXX',
-      badge: 'Most Popular',
+      price: '12,000',
+      monthlyPrice: '4,000 / month',
+      badge: 'Save Rs. 1,500',
       popular: true,
       features: [
         'Full gym floor access',
@@ -43,15 +43,16 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onOpenJoin }) =>
     {
       name: 'Yearly Plan',
       duration: '12 Months',
-      price: 'Rs. XXXX',
-      badge: 'Best Value',
+      price: '40,000',
+      monthlyPrice: '3,333 / month',
+      badge: 'Save Rs. 14,000',
       popular: false,
       features: [
         'Full year unlimited access',
         'Locker & hot shower facility',
         'Customized workout guidance',
         'Guest pass privileges',
-        'Maximum savings',
+        'Save Rs. 14,000 vs monthly',
       ],
     },
   ];
@@ -78,34 +79,33 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onOpenJoin }) =>
           {plans.map((plan, idx) => (
             <div
               key={idx}
-              className={`rounded-2xl p-8 flex flex-col justify-between transition-all relative ${
+              className={`rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 relative ${
                 plan.popular
-                  ? 'bg-[#0e121d] border-2 border-cyan-400 shadow-2xl shadow-cyan-500/10 lg:-translate-y-2'
+                  ? 'bg-[#0e121d] border-2 border-cyan-400 shadow-2xl shadow-cyan-500/10'
                   : 'bg-[#0e1017] border border-zinc-800'
               }`}
             >
-              {plan.popular && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-cyan-400 text-black font-bold text-[11px] uppercase tracking-widest px-3.5 py-1 rounded-full shadow-md">
-                  Most Popular
-                </div>
-              )}
-
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold font-heading text-white uppercase">
                     {plan.name}
                   </h3>
-                  <span className="text-xs font-semibold text-cyan-400 bg-cyan-950/80 border border-cyan-500/30 px-2.5 py-1 rounded-full uppercase">
-                    {plan.duration}
-                  </span>
+                  {plan.badge && (
+                    <span className="text-[10px] font-bold text-black bg-cyan-400 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                      {plan.badge}
+                    </span>
+                  )}
                 </div>
 
                 <div className="my-6 pb-6 border-b border-zinc-800">
-                  <span className="text-3xl sm:text-4xl font-black font-heading text-white">
-                    {plan.price}
-                  </span>
-                  <span className="text-xs text-zinc-400 block mt-1">
-                    [YAHAN REAL PRICE LIKHA JAYEGA]
+                  <div className="flex items-start">
+                    <span className="text-sm font-bold text-zinc-400 mt-2 mr-1">Rs.</span>
+                    <span className="text-5xl font-black font-heading text-white">
+                      {plan.price}
+                    </span>
+                  </div>
+                  <span className="text-xs text-zinc-500 block mt-2 font-medium">
+                    {plan.monthlyPrice ? plan.monthlyPrice : '1 month, no commitment'}
                   </span>
                 </div>
 
@@ -135,8 +135,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onOpenJoin }) =>
         </div>
 
         {/* Note */}
-        <div className="mt-12 text-center text-xs text-zinc-400">
-          * Note: Personal training charges are separate. Contact the front desk or trainers for 1-on-1 coaching packages.
+        <div className="mt-12 text-center text-xs text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+          * Note: Personal training charges are separate. Joining fee: Rs. 2,000. Prices include all applicable taxes and there are no hidden charges.
         </div>
 
       </div>
