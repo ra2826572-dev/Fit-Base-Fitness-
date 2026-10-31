@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { 
   MapPin, 
@@ -6,8 +6,6 @@ import {
   Clock, 
   Navigation, 
   ExternalLink, 
-  Compass, 
-  Car, 
   Copy, 
   Check
 } from 'lucide-react';
@@ -20,17 +18,7 @@ interface LocationSectionProps {
 
 export const LocationSection: React.FC<LocationSectionProps> = () => {
   const [copied, setCopied] = useState(false);
-  const [dirPulseCount, setDirPulseCount] = useState(0);
   const shouldReduceMotion = useReducedMotion();
-
-  // Pulse ring one time on reveal only (two cycles max, then stop)
-  useEffect(() => {
-    if (shouldReduceMotion || dirPulseCount >= 2) return;
-    const timer = setTimeout(() => {
-      setDirPulseCount((prev) => prev + 1);
-    }, 1800);
-    return () => clearTimeout(timer);
-  }, [dirPulseCount, shouldReduceMotion]);
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(`${GYM_INFO.name}, ${GYM_INFO.address.line1}, ${GYM_INFO.address.city}, ${GYM_INFO.address.postalCode}`);
@@ -38,59 +26,8 @@ export const LocationSection: React.FC<LocationSectionProps> = () => {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const infoItems = [
-    {
-      icon: MapPin,
-      title: 'Address',
-      content: (
-        <>
-          <p className="text-sm font-medium text-zinc-200 mt-0.5">
-            {GYM_INFO.address.line1}<br />
-            {GYM_INFO.address.city}, {GYM_INFO.address.province}, {GYM_INFO.address.country} – {GYM_INFO.address.postalCode}
-          </p>
-          <p className="text-xs text-cyan-400/80 mt-1 font-mono">
-            Plus Code: {GYM_INFO.address.plusCode}
-          </p>
-        </>
-      ),
-    },
-    {
-      icon: Clock,
-      title: 'Opening Hours',
-      content: (
-        <>
-          <p className="text-sm font-bold text-white mt-0.5">
-            Daily: 6:00 AM – 12:00 AM
-          </p>
-          <p className="text-xs text-emerald-400 mt-0.5">
-            Open 7 Days a Week (18 Hours Daily)
-          </p>
-        </>
-      ),
-    },
-    {
-      icon: Phone,
-      title: 'Direct Phone',
-      content: (
-        <>
-          <p className="text-sm font-bold text-white mt-0.5">
-            <a href={`tel:${GYM_INFO.phoneRaw}`} className="hover:text-cyan-400 transition-colors">
-              {GYM_INFO.phoneDisplay}
-            </a>
-          </p>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Call for inquiries, tours, or trainer appointments
-          </p>
-        </>
-      ),
-    },
-  ];
-
   return (
-    <section id="location" className="py-10 sm:py-16 md:py-20 bg-[#08090d] relative overflow-hidden">
-      {/* Ambient background glow */}
-      <div className="absolute top-0 right-1/3 w-96 h-96 bg-cyan-600/5 rounded-full blur-3xl pointer-events-none" />
-
+    <section id="location" className="py-12 sm:py-20 bg-[#08090d] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
@@ -103,244 +40,152 @@ export const LocationSection: React.FC<LocationSectionProps> = () => {
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase mb-3">
             <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-            CONVENIENT CANAL ROAD ACCESS
+            VISIT OUR FACILITY
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-heading text-white tracking-tight uppercase">
-            FIND YOUR NEW <span className="text-cyan-400">TRAINING HOME.</span>
+            LOCATION & <span className="text-cyan-400">HOURS.</span>
           </h2>
           <p className="mt-3 text-zinc-400 text-sm sm:text-base max-w-xl mx-auto">
-            Located in Green Avenue along Canal Road, Faisalabad. Easily accessible with ample parking and daily extended hours.
+            Conveniently situated on West Canal Road, Green Avenue with ample parking and open daily from 6 AM to 12 AM.
           </p>
         </motion.div>
 
-        {/* Location Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        {/* 2-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Info Card (Left Column) */}
-          <div className="lg:col-span-5 bg-[#0e1017] border border-zinc-800 rounded-2xl p-7 sm:p-8 flex flex-col justify-between shadow-2xl relative">
-            <div>
-              {/* Business Name Badge */}
-              <div className="flex items-center justify-between pb-6 border-b border-zinc-800">
-                <div>
-                  <h3 className="text-2xl font-black font-heading text-white">
-                    {GYM_INFO.name}
-                  </h3>
-                  <span className="text-xs font-semibold text-cyan-400 tracking-wider uppercase">
-                    Faisalabad Flagship Facility
-                  </span>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center">
-                  <Compass className="w-5 h-5 text-cyan-400" />
-                </div>
-              </div>
-
-              {/* Staggered Address and Detail Items */}
-              <div className="mt-6 space-y-5">
-                {infoItems.map((item, idx) => {
-                  const Icon = item.icon;
-                  return (
-                    <motion.div
-                      key={idx}
-                      initial={
-                        shouldReduceMotion
-                          ? { opacity: 1, x: 0 }
-                          : { opacity: 0, x: -16 }
-                      }
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: MOTION_TOKENS.duration.ui,
-                        delay: shouldReduceMotion ? 0 : idx * 0.1,
-                        ease: MOTION_TOKENS.ease.entrance,
-                      }}
-                      className="flex items-start gap-3.5"
-                    >
-                      <div className="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 mt-0.5">
-                        <Icon className="w-4 h-4 text-cyan-400" />
-                      </div>
-                      <div className="flex-1">
-                        <span className="text-xs text-zinc-400 uppercase font-semibold">{item.title}</span>
-                        {item.content}
-                      </div>
-                    </motion.div>
-                  );
-                })}
+          {/* LEFT CARD */}
+          <div className="lg:col-span-5 bg-[#0e1017] border border-zinc-800 rounded-2xl overflow-hidden shadow-xl flex flex-col">
+            {/* Exterior Photo */}
+            <div className="relative h-48 sm:h-52 overflow-hidden bg-zinc-900 border-b border-zinc-800">
+              <img
+                src={GYM_INFO.images.exterior}
+                alt="Fit Base Fitness Center Exterior"
+                className="w-full h-full object-cover object-center brightness-90"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0e1017] via-transparent to-black/20" />
+              <div className="absolute top-3 left-3 bg-zinc-900/95 backdrop-blur-md border border-cyan-500/30 px-3 py-1 rounded-lg text-[11px] font-bold text-cyan-300 uppercase tracking-wider">
+                Flagship Facility
               </div>
             </div>
 
-            {/* Quick Copy & Action Buttons */}
-            <div className="mt-8 pt-6 border-t border-zinc-800 space-y-3">
-              <div className="flex gap-2">
-                <button
-                  onClick={handleCopyAddress}
-                  className="w-full py-2 px-3 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-xs font-semibold text-zinc-300 border border-zinc-800 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Address Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>Copy Full Address</span>
-                    </>
-                  )}
-                </button>
+            <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
+              <div>
+                <h3 className="text-2xl font-black font-heading text-white uppercase">
+                  {GYM_INFO.name}
+                </h3>
+                <p className="text-xs font-semibold text-cyan-400 tracking-wider uppercase mt-0.5">
+                  Faisalabad Flagship Facility
+                </p>
+
+                {/* 3 Rows: Address, Hours, Phone */}
+                <div className="mt-6 space-y-5 text-sm">
+                  {/* Address */}
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-zinc-200">
+                        {GYM_INFO.address.line1}, {GYM_INFO.address.city}
+                      </p>
+                      <p className="text-xs text-zinc-400 mt-0.5 font-mono">
+                        Plus Code: {GYM_INFO.address.plusCode}
+                      </p>
+                      <button
+                        onClick={handleCopyAddress}
+                        className="mt-1 text-xs text-cyan-400 hover:text-cyan-300 font-semibold inline-flex items-center gap-1 cursor-pointer"
+                        aria-label="Copy full address"
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <span className="text-emerald-400">Address copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Copy address</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Hours */}
+                  <div className="flex items-start gap-3">
+                    <Clock className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-white">
+                        Daily: 6:00 AM – 12:00 AM
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="flex items-start gap-3">
+                    <Phone className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+                    <div>
+                      <a href={`tel:${GYM_INFO.phoneRaw}`} className="font-bold text-white hover:text-cyan-400 transition-colors">
+                        {GYM_INFO.phoneDisplay}
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                {/* GET DIRECTIONS primary button with pulse ring (two cycles max on reveal then stops) */}
-                <div className="relative">
-                  {!shouldReduceMotion && dirPulseCount < 2 && (
-                    <span className="absolute -inset-1 rounded-xl bg-cyan-400/35 animate-ping pointer-events-none" />
-                  )}
-                  <a
-                    href={GYM_INFO.address.googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative w-full py-3.5 px-4 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black font-extrabold text-xs sm:text-sm text-center shadow-lg shadow-cyan-500/25 transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-1.5"
-                    id="location-get-directions-btn"
-                  >
-                    <Navigation className="w-4 h-4" />
-                    <span>GET DIRECTIONS</span>
-                  </a>
-                </div>
-
+              {/* Action Buttons */}
+              <div className="pt-6 border-t border-zinc-800 grid grid-cols-2 gap-3">
+                <a
+                  href={GYM_INFO.address.googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Get directions to Fit Base Fitness Center on Google Maps"
+                  className="py-3 px-4 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black font-extrabold text-xs sm:text-sm text-center transition-all flex items-center justify-center gap-1.5 shadow-md"
+                >
+                  <Navigation className="w-4 h-4" />
+                  <span>Get Directions</span>
+                </a>
                 <a
                   href={`tel:${GYM_INFO.phoneRaw}`}
-                  className="py-3.5 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs sm:text-sm text-center border border-zinc-700 hover:border-cyan-500/40 transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-1.5"
-                  id="location-call-now-btn"
+                  aria-label="Call Fit Base Fitness Center"
+                  className="py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs sm:text-sm text-center border border-zinc-700 hover:border-cyan-500/40 transition-all flex items-center justify-center gap-1.5"
                 >
                   <Phone className="w-4 h-4 text-cyan-400" />
-                  <span>CALL NOW</span>
+                  <span>Call Now</span>
                 </a>
               </div>
             </div>
-
           </div>
 
-          {/* Interactive Map Visualizer: Fades and scales from 0.98 on enter */}
-          <motion.div
-            initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5, ease: MOTION_TOKENS.ease.entrance }}
-            className="lg:col-span-7 bg-[#0e1017] border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col relative min-h-[400px]"
-          >
-            {/* Top Map Bar */}
-            <div className="bg-zinc-900/90 border-b border-zinc-800 px-5 py-3 flex items-center justify-between z-10">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                <span className="text-xs font-bold text-zinc-200 uppercase tracking-wider font-heading">
-                  Fit Base Navigation Radar • Faisalabad
-                </span>
-              </div>
+          {/* RIGHT COLUMN: Asli Google Maps iframe with dark filter */}
+          <div className="lg:col-span-7 bg-[#0e1017] border border-zinc-800 rounded-2xl overflow-hidden shadow-xl flex flex-col min-h-[460px]">
+            <div className="flex-1 relative w-full h-[410px]">
+              <iframe
+                title="Fit Base Fitness Center Location Map"
+                src="https://maps.google.com/maps?q=Fit%20Base%20Fitness%20Center%20W%20Canal%20Rd%20Green%20Avenue%20Faisalabad&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                className="w-full h-full border-0 absolute inset-0"
+                style={{ filter: 'invert(90%) hue-rotate(180deg) grayscale(30%) contrast(110%)' }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            {/* Thin bottom bar */}
+            <div className="bg-zinc-900/95 border-t border-zinc-800 px-5 py-3.5 flex items-center justify-between">
+              <span className="text-xs font-semibold text-zinc-400">
+                W Canal Rd, Green Avenue, Faisalabad
+              </span>
               <a
                 href={GYM_INFO.address.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1"
+                className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors"
+                aria-label="Open Fit Base location in Google Maps"
               >
                 <span>Open in Google Maps</span>
-                <ExternalLink className="w-3 h-3" />
+                <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
-
-            {/* Custom GIS Canvas */}
-            <div className="relative flex-1 bg-[#090b10] overflow-hidden flex items-center justify-center p-6 select-none">
-              
-              {/* Background Road Grid Lines */}
-              <div className="absolute inset-0 bg-[radial-gradient(#1f293d_1px,transparent_1px)] [background-size:24px_24px] opacity-40" />
-
-              {/* Major Simulated Faisalabad Arteries */}
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 right-10 w-24 h-[120%] bg-cyan-950/40 -rotate-45 border-l-2 border-r-2 border-cyan-500/20 flex items-center justify-center">
-                  <span className="text-[10px] uppercase font-mono tracking-widest text-cyan-400/40 -rotate-90">
-                    CANAL ROAD (FAISALABAD)
-                  </span>
-                </div>
-
-                <div className="absolute top-1/2 left-0 right-0 h-14 bg-zinc-900/40 border-t border-b border-zinc-800 flex items-center pl-8">
-                  <span className="text-[9px] uppercase font-mono tracking-widest text-zinc-600">
-                    GREEN AVENUE ACCESS
-                  </span>
-                </div>
-              </div>
-
-              {/* Exterior Photo Inset */}
-              <div className="absolute top-4 right-4 z-10 w-36 sm:w-44 rounded-xl overflow-hidden border border-zinc-700 shadow-2xl hidden sm:block">
-                <img
-                  src={GYM_INFO.images.exterior}
-                  alt="Fit Base Fitness Center Building"
-                  className="w-full h-24 object-cover"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="bg-black/90 p-1.5 text-[10px] text-center text-zinc-300 font-bold">
-                  Exterior Entrance
-                </div>
-              </div>
-
-              {/* Center Map Pin */}
-              <div className="relative z-20 flex flex-col items-center">
-                {/* Floating Tooltip */}
-                <div className="bg-[#08090d] border border-cyan-400/80 px-4 py-2.5 rounded-xl shadow-2xl shadow-cyan-500/30 text-center mb-2 backdrop-blur-md">
-                  <div className="text-xs font-black text-white font-heading flex items-center gap-1.5 justify-center">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                    FIT BASE FITNESS CENTER
-                  </div>
-                  <div className="text-[11px] text-cyan-300 mt-0.5">
-                    204 Chak, W Canal Rd, Green Avenue
-                  </div>
-                  <div className="text-[10px] text-emerald-400 font-semibold mt-1">
-                    ★ 4.8 Rating • Open 6:00 AM – 12:00 AM
-                  </div>
-                </div>
-
-                {/* Pin Icon */}
-                <div className="w-12 h-12 rounded-full bg-cyan-400 text-black flex items-center justify-center shadow-2xl shadow-cyan-400/50 border-2 border-white">
-                  <MapPin className="w-6 h-6 fill-black text-black" />
-                </div>
-              </div>
-
-              {/* Surrounding Landmark Markers - Staggered in */}
-              <motion.div
-                initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.3 }}
-                className="absolute bottom-6 left-6 z-10 bg-zinc-900/90 border border-zinc-800 p-3 rounded-xl backdrop-blur-md text-xs space-y-1.5 max-w-xs"
-              >
-                <div className="font-bold text-zinc-200 flex items-center gap-1.5">
-                  <Car className="w-3.5 h-3.5 text-cyan-400" />
-                  Navigation Landmarks:
-                </div>
-                <div className="text-[11px] text-zinc-400 space-y-1">
-                  <p>• East / West Canal Road corridor</p>
-                  <p>• Green Avenue, 204 Chak intersection</p>
-                  <p>• Dedicated on-site member parking</p>
-                </div>
-              </motion.div>
-
-            </div>
-
-            {/* Bottom Actions Bar */}
-            <div className="bg-zinc-900/95 border-t border-zinc-800 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="text-xs text-zinc-400">
-                <span className="text-zinc-200 font-semibold">Location Code:</span> F523+6Q Faisalabad, Pakistan
-              </div>
-              <a
-                href={GYM_INFO.address.googleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-5 py-2 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-black font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
-              >
-                <span>Navigate With GPS</span>
-                <Navigation className="w-3.5 h-3.5" />
-              </a>
-            </div>
-
-          </motion.div>
+          </div>
 
         </div>
 

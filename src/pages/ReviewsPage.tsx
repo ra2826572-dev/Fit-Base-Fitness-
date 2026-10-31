@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  Star, 
-  MessageSquare, 
-  Quote, 
-  Users
+  Star
 } from 'lucide-react';
 import { ReviewsSection } from '../components/ReviewsSection';
-import { SocialSection } from '../components/SocialSection';
 import { REVIEWS_DATA, GYM_INFO } from '../data/gymData';
 
 interface ReviewsPageProps {
@@ -28,7 +24,7 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onOpenReviewsModal, on
       <ReviewsSection onOpenReviewsModal={onOpenReviewsModal} />
 
       {/* Filterable Detailed Reviews Grid */}
-      <section className="py-20 sm:py-28 bg-[#0a0c13] border-t border-zinc-850">
+      <section className="py-16 sm:py-24 bg-[#0a0c13] border-t border-zinc-850">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-6 border-b border-zinc-800">
             <div>
@@ -44,7 +40,7 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onOpenReviewsModal, on
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setFilterRating('all')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   filterRating === 'all'
                     ? 'bg-cyan-400 text-black shadow-md'
                     : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800'
@@ -54,7 +50,7 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onOpenReviewsModal, on
               </button>
               <button
                 onClick={() => setFilterRating(5)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
                   filterRating === 5
                     ? 'bg-cyan-400 text-black shadow-md'
                     : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800'
@@ -99,7 +95,7 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onOpenReviewsModal, on
                         {review.author}
                       </div>
                       <div className="text-[10px] text-zinc-400">
-                        {review.role || 'Member'}
+                        Fit Base Member
                       </div>
                     </div>
                   </div>
@@ -109,9 +105,6 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({ onOpenReviewsModal, on
           </div>
         </div>
       </section>
-
-      {/* Community & Instagram Showcase */}
-      <SocialSection />
     </div>
   );
 };

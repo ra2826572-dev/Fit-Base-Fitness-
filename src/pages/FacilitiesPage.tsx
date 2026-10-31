@@ -1,14 +1,11 @@
 import React from 'react';
 import { 
-  Layers, 
-  Dumbbell, 
-  Activity, 
-  Wind, 
   Wifi, 
   Car, 
   CreditCard, 
   CheckCircle2, 
   Droplets,
+  Wind,
   Phone
 } from 'lucide-react';
 import { FacilitiesSection } from '../components/FacilitiesSection';
@@ -35,7 +32,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({ onOpenJoin, onOp
       <FacilitiesSection onOpenJoin={(title) => onOpenJoin(title || 'Gym Facilities')} />
 
       {/* Complete Amenities & Services Showcase */}
-      <section className="py-20 sm:py-28 bg-[#0a0c13] border-t border-zinc-850">
+      <section className="py-16 sm:py-24 bg-[#0a0c13] border-t border-zinc-850">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="px-3.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase inline-block mb-3">
@@ -87,7 +84,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({ onOpenJoin, onOp
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <button
               onClick={() => onOpenJoin('Facility Membership')}
-              className="px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-bold text-sm hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 transition-all"
+              className="px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-bold text-sm hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 transition-all cursor-pointer"
             >
               Join Now
             </button>

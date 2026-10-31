@@ -21,6 +21,7 @@ interface ProgramsSectionProps {
 
 export const ProgramsSection: React.FC<ProgramsSectionProps> = ({ onOpenJoin }) => {
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [flippedId, setFlippedId] = useState<string | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
   const getProgramIcon = (icon: string) => {
@@ -64,7 +65,7 @@ export const ProgramsSection: React.FC<ProgramsSectionProps> = ({ onOpenJoin }) 
           </p>
         </motion.div>
 
-        {/* 4 Program Cards: Reveal on scroll with stagger 100ms */}
+        {/* 4 Program Cards with 3D Flip Effect */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {PROGRAMS_DATA.map((program, index) => (
             <motion.div
@@ -81,66 +82,106 @@ export const ProgramsSection: React.FC<ProgramsSectionProps> = ({ onOpenJoin }) 
                 delay: shouldReduceMotion ? 0 : index * 0.1,
                 ease: MOTION_TOKENS.ease.entrance,
               }}
-              className="bg-[#0e1017] rounded-2xl p-6 sm:p-7 border border-zinc-800/90 transition-all duration-300 flex flex-col justify-between group shadow-xl relative overflow-hidden [@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:border-cyan-400/60"
+              className="h-[490px] w-full [perspective:1200px] group cursor-pointer focus:outline-none"
+              tabIndex={0}
+              onClick={() => {
+                if (window.innerWidth < 1024 || 'ontouchstart' in window) {
+                  setFlippedId(flippedId === program.id ? null : program.id);
+                }
+              }}
               id={`program-card-${program.id}`}
             >
-              {/* Subtle top accent line that scales from 0 to 100% width on hover */}
-              <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-400 via-sky-300 to-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              <div
+                className={`relative w-full h-full duration-700 ease-[cubic-bezier(0.4,0.2,0.2,1)] [transform-style:preserve-3d] ${
+                  shouldReduceMotion
+                    ? ''
+                    : 'group-hover:[transform:rotateY(180deg)] group-focus-within:[transform:rotateY(180deg)]'
+                } ${
+                  flippedId === program.id && !shouldReduceMotion ? '[transform:rotateY(180deg)]' : ''
+                }`}
+              >
+                {/* FRONT SIDE */}
+                <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [-webkit-backface-visibility:hidden] bg-[#0e1017] rounded-2xl p-6 sm:p-7 border border-zinc-800/90 flex flex-col justify-between shadow-xl overflow-hidden">
+                  {/* Subtle top accent line */}
+                  <span className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-400 via-sky-300 to-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
 
-              <div>
-                {/* Top Row: Icon & Tag (static badges, no infinite animations) */}
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-cyan-500/30 group-hover:border-cyan-400 flex items-center justify-center shadow-lg group-hover:shadow-cyan-500/20 transition-all">
+                  <div>
+                    {/* Top Row: Icon & Tag */}
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-cyan-500/30 group-hover:border-cyan-400 flex items-center justify-center shadow-lg group-hover:shadow-cyan-500/20 transition-all">
+                        {getProgramIcon(program.icon)}
+                      </div>
+                      <span className="text-[11px] font-bold text-zinc-400 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                        {program.intensity}
+                      </span>
+                    </div>
+
+                    {/* Subtitle */}
+                    <span className="text-xs font-semibold text-cyan-400 uppercase tracking-wider block mb-1">
+                      {program.subtitle}
+                    </span>
+
+                    {/* Title */}
+                    <h3 className="text-xl font-bold font-heading text-white group-hover:text-cyan-300 transition-colors">
+                      {program.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="mt-3 text-sm text-zinc-400 leading-relaxed line-clamp-3">
+                      {program.description}
+                    </p>
+
+                    {/* Key Bullet Highlights */}
+                    <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-2">
+                      {program.highlights.slice(0, 2).map((item, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-xs text-zinc-300">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
+                          <span className="line-clamp-1">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Bottom Action: Join Goal (Learn More is now on back side) */}
+                  <div className="mt-7 pt-4 border-t border-zinc-800/60 flex items-center justify-end">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpenJoin(program.title);
+                      }}
+                      className="w-full py-2.5 rounded-xl text-xs font-bold text-zinc-200 hover:text-black bg-zinc-900 hover:bg-cyan-400 border border-zinc-800 transition-all cursor-pointer text-center shadow-md"
+                    >
+                      Join Goal
+                    </button>
+                  </div>
+                </div>
+
+                {/* BACK SIDE */}
+                <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [-webkit-backface-visibility:hidden] bg-[#0e1017] rounded-2xl p-6 sm:p-7 border border-cyan-500/40 shadow-2xl shadow-cyan-500/15 flex flex-col items-center justify-center text-center [transform:rotateY(180deg)]">
+                  <div className="w-16 h-16 rounded-2xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cyan-500/20">
                     {getProgramIcon(program.icon)}
                   </div>
-                  <span className="text-[11px] font-bold text-zinc-400 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded-full uppercase tracking-wider">
-                    {program.intensity}
+                  <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-1">
+                    {program.subtitle}
                   </span>
+                  <h3 className="text-2xl font-bold font-heading text-white uppercase mb-3">
+                    {program.title}
+                  </h3>
+                  <p className="text-xs text-zinc-300 max-w-xs mx-auto mb-8 leading-relaxed">
+                    {program.idealFor}
+                  </p>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedProgram(program);
+                    }}
+                    className="px-8 py-3.5 rounded-full bg-cyan-400 text-black font-bold uppercase text-xs tracking-wider shadow-lg shadow-cyan-500/30 hover:bg-cyan-300 hover:scale-105 transition-all inline-flex items-center gap-2 cursor-pointer"
+                  >
+                    <span>Learn More</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
-
-                {/* Subtitle */}
-                <span className="text-xs font-semibold text-cyan-400 uppercase tracking-wider block mb-1">
-                  {program.subtitle}
-                </span>
-
-                {/* Title */}
-                <h3 className="text-xl font-bold font-heading text-white group-hover:text-cyan-300 transition-colors">
-                  {program.title}
-                </h3>
-
-                {/* Description */}
-                <p className="mt-3 text-sm text-zinc-400 leading-relaxed">
-                  {program.description}
-                </p>
-
-                {/* Key Bullet Highlights */}
-                <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-2">
-                  {program.highlights.slice(0, 2).map((item, idx) => (
-                    <div key={idx} className="flex items-start gap-2 text-xs text-zinc-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                      <span className="line-clamp-1">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bottom Actions: Arrow slides 4px on hover */}
-              <div className="mt-7 pt-4 border-t border-zinc-800/60 flex items-center justify-between">
-                <button
-                  onClick={() => setSelectedProgram(program)}
-                  className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
-                  id={`program-learn-more-${program.id}`}
-                >
-                  <span>LEARN MORE</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-200" />
-                </button>
-
-                <button
-                  onClick={() => onOpenJoin(program.title)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-200 hover:text-black bg-zinc-900 hover:bg-cyan-400 border border-zinc-800 transition-all cursor-pointer"
-                >
-                  Join Goal
-                </button>
               </div>
             </motion.div>
           ))}

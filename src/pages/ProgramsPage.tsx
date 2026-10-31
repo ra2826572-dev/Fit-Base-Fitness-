@@ -1,16 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { 
-  Flame, 
-  Dumbbell, 
-  Target, 
-  Activity, 
-  Calculator, 
   CheckCircle2, 
-  ArrowRight,
-  Sparkles
+  Phone
 } from 'lucide-react';
 import { ProgramsSection } from '../components/ProgramsSection';
+import { GYM_INFO } from '../data/gymData';
 
 interface ProgramsPageProps {
   onOpenJoin: (goal?: string) => void;
@@ -44,6 +38,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({ onOpenJoin, onOpenTr
 
   return (
     <div className="space-y-0">
+      {/* Main Programs Component */}
 
       {/* Main Programs Component */}
       <ProgramsSection
@@ -52,7 +47,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({ onOpenJoin, onOpenTr
       />
 
       {/* Training Split Comparison Guide */}
-      <section className="py-20 sm:py-28 bg-[#0a0c13] border-t border-zinc-850">
+      <section className="py-16 sm:py-24 bg-[#0a0c13] border-t border-zinc-850">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="px-3.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase inline-block mb-3">
@@ -104,37 +99,40 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({ onOpenJoin, onOpenTr
                 <div className="mt-8 pt-6 border-t border-zinc-800">
                   <button
                     onClick={() => onOpenJoin(split.name)}
-                    className="w-full py-2.5 rounded-xl bg-zinc-800 hover:bg-cyan-400 hover:text-black text-white font-bold text-xs uppercase tracking-wider transition-all"
+                    className="w-full py-2.5 rounded-xl bg-zinc-800 hover:bg-cyan-400 text-zinc-200 hover:text-black font-bold text-xs uppercase tracking-wider transition-all cursor-pointer"
                   >
-                    Select This Split &rarr;
+                    Select Program
                   </button>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Calculator Link Banner */}
-          <div className="mt-16 p-8 rounded-3xl bg-gradient-to-r from-zinc-900 via-[#0d121c] to-zinc-900 border border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
-                <Calculator className="w-7 h-7" />
-              </div>
-              <div>
-                <h3 className="text-lg sm:text-xl font-bold font-heading text-white uppercase">
-                  NOT SURE WHICH SPLIT FITS YOU?
-                </h3>
-                <p className="text-zinc-400 text-xs sm:text-sm mt-0.5">
-                  Use our interactive fitness calculator to get instant BMI, calorie, and split recommendations.
-                </p>
-              </div>
-            </div>
-            <Link
-              to="/calculator"
-              className="px-6 py-3 rounded-xl bg-cyan-400 text-black font-bold text-xs sm:text-sm hover:bg-cyan-300 transition-all shrink-0 inline-flex items-center gap-2"
+      {/* Call to Action */}
+      <section className="py-16 sm:py-20 bg-gradient-to-r from-zinc-950 via-[#0a121e] to-zinc-950 border-t border-zinc-800 text-center">
+        <div className="max-w-3xl mx-auto px-4">
+          <h2 className="text-2xl sm:text-3xl font-black font-heading text-white uppercase">
+            NOT SURE WHICH PROGRAM FITS YOU?
+          </h2>
+          <p className="text-zinc-300 text-sm sm:text-base mt-3">
+            Speak directly with our expert fitness trainers on West Canal Road, Faisalabad.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <button
+              onClick={() => onOpenJoin('Custom Training Consultation')}
+              className="px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-bold text-sm hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 transition-all cursor-pointer"
             >
-              <span>Launch Goal Calculator</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+              Book Free Consultation
+            </button>
+            <a
+              href={`tel:${GYM_INFO.phoneRaw}`}
+              className="px-8 py-3.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-bold text-sm hover:border-cyan-400 transition-colors flex items-center gap-2"
+            >
+              <Phone className="w-4 h-4 text-cyan-400" />
+              <span>Call Now</span>
+            </a>
           </div>
         </div>
       </section>

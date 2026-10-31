@@ -33,7 +33,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenJoin, onOpenDirectio
       </div>
 
       {/* Atmosphere, Culture & Standards Section */}
-      <section className="py-20 sm:py-28 bg-[#0a0c13] border-t border-zinc-850 relative">
+      <section className="py-16 sm:py-24 bg-[#0a0c13] border-t border-zinc-850 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="px-3.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase inline-block mb-3">
@@ -118,7 +118,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenJoin, onOpenDirectio
       </section>
 
       {/* Call to Action Banner: Primary (Join Now) & Secondary (Call Now) */}
-      <section className="py-16 sm:py-24 bg-gradient-to-r from-zinc-950 via-[#0d131f] to-zinc-950 border-t border-zinc-800 text-center">
+      <section className="py-16 sm:py-20 bg-gradient-to-r from-zinc-950 via-[#0d131f] to-zinc-950 border-t border-zinc-800 text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <h2 className="text-3xl sm:text-4xl font-black font-heading text-white uppercase tracking-tight">
             READY TO JOIN FIT BASE?
@@ -129,7 +129,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenJoin, onOpenDirectio
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <button
               onClick={() => onOpenJoin('Membership')}
-              className="px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-extrabold text-sm hover:bg-cyan-300 shadow-xl shadow-cyan-500/25 transition-all"
+              className="px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-extrabold text-sm hover:bg-cyan-300 shadow-xl shadow-cyan-500/25 transition-all cursor-pointer"
             >
               Join Now
             </button>

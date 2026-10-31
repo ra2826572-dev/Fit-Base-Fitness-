@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { 
-  Users, 
-  Dumbbell, 
   CheckCircle2, 
   Phone
 } from 'lucide-react';

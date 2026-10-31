@@ -1,14 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Calculator, 
   Target, 
   Activity, 
   Flame, 
-  Sparkles, 
-  CheckCircle2, 
-  HelpCircle,
-  ArrowRight,
   Phone
 } from 'lucide-react';
 import { FitnessCalculator } from '../components/FitnessCalculator';
@@ -31,7 +26,7 @@ export const CalculatorPage: React.FC<CalculatorPageProps> = ({ onOpenJoin }) =>
       <FitnessCalculator onSelectGoal={handleSelectGoal} />
 
       {/* Scientific Body Recomposition Guide */}
-      <section className="py-20 sm:py-28 bg-[#0a0c13] border-t border-zinc-850">
+      <section className="py-16 sm:py-24 bg-[#0a0c13] border-t border-zinc-850">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="px-3.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase inline-block mb-3">
@@ -93,7 +88,7 @@ export const CalculatorPage: React.FC<CalculatorPageProps> = ({ onOpenJoin }) =>
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               <button
                 onClick={() => onOpenJoin('Calculator Custom Program')}
-                className="px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-bold text-sm hover:bg-cyan-300 transition-all"
+                className="px-8 py-3.5 rounded-xl bg-cyan-400 text-black font-bold text-sm hover:bg-cyan-300 transition-all cursor-pointer"
               >
                 Join Now
               </button>

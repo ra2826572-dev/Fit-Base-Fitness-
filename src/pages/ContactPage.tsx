@@ -1,17 +1,6 @@
 import React from 'react';
-import { 
-  Phone, 
-  MessageSquare, 
-  MapPin, 
-  Clock, 
-  HelpCircle, 
-  Send,
-  CreditCard,
-  ShieldCheck
-} from 'lucide-react';
 import { ContactSection } from '../components/ContactSection';
 import { FaqSection } from '../components/FaqSection';
-import { GYM_INFO } from '../data/gymData';
 
 interface ContactPageProps {
   initialGoal?: string;

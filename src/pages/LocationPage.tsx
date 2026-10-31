@@ -1,14 +1,11 @@
 import React from 'react';
 import { 
-  MapPin, 
   Clock, 
-  Phone, 
-  Navigation, 
   Car, 
   CheckCircle2, 
-  ExternalLink,
-  ShieldCheck,
-  Compass
+  Navigation, 
+  MapPin, 
+  Phone
 } from 'lucide-react';
 import { LocationSection } from '../components/LocationSection';
 import { GYM_INFO } from '../data/gymData';
@@ -35,7 +32,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onOpenDirections, on
       <LocationSection onOpenDirectionsModal={onOpenDirections} />
 
       {/* Detailed Schedule & Transit Logistics */}
-      <section className="py-20 sm:py-28 bg-[#0a0c13] border-t border-zinc-850">
+      <section className="py-16 sm:py-24 bg-[#0a0c13] border-t border-zinc-850">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             
@@ -100,33 +97,31 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onOpenDirections, on
                   <div className="flex items-start gap-3">
                     <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-white">Motorcycle & Bike Stands:</strong> Sheltered, designated two-wheeler parking space.
+                      <strong className="text-white">Street Parking:</strong> Secure wide street parking zones available along Green Avenue.
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-white">Prominent Landmarks:</strong> Situated in Green Avenue along West Canal Road, just above Peri Liciouss, easily recognizable by our vibrant rooftop neon signs at night.
+                      <strong className="text-white">Landmark Directions:</strong> Located on West Canal Road, easily accessible from major Faisalabad arteries.
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-zinc-800 flex flex-wrap gap-3">
-                  <a
-                    href="https://maps.google.com/?q=Fit+Base+Fitness+Center+Faisalabad"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 py-3 rounded-xl bg-cyan-400 text-black font-bold text-xs uppercase tracking-wider hover:bg-cyan-300 transition-all text-center inline-flex items-center justify-center gap-2"
+                <div className="pt-4 border-t border-zinc-800 flex gap-4">
+                  <button
+                    onClick={onOpenDirections}
+                    className="flex-1 py-3 rounded-xl bg-cyan-400 text-black font-bold text-xs uppercase tracking-wider hover:bg-cyan-300 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>Open in Google Maps</span>
-                  </a>
+                    <Navigation className="w-4 h-4" />
+                    <span>Get Directions</span>
+                  </button>
                   <a
                     href={`tel:${GYM_INFO.phoneRaw}`}
-                    className="py-3 px-5 rounded-xl bg-zinc-800 text-white font-bold text-xs uppercase tracking-wider hover:bg-zinc-700 transition-all inline-flex items-center justify-center gap-2"
+                    className="py-3 px-6 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
                   >
                     <Phone className="w-4 h-4 text-cyan-400" />
-                    <span>Call Desk</span>
+                    <span>Call</span>
                   </a>
                 </div>
               </div>
