@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { 
   Dumbbell, 
-  Wind, 
-  Activity, 
-  Zap, 
-  Layers, 
   Check, 
   ChevronRight,
-  Maximize2
+  Maximize2,
+  Phone,
+  Layers
 } from 'lucide-react';
-import { FACILITIES_DATA } from '../data/gymData';
+import { FACILITIES_DATA, GYM_INFO } from '../data/gymData';
 import { Facility } from '../types';
+import { MOTION_TOKENS } from '../utils/motionTokens';
 
 interface FacilitiesSectionProps {
   onOpenJoin: (goal?: string) => void;
@@ -19,6 +19,7 @@ interface FacilitiesSectionProps {
 export const FacilitiesSection: React.FC<FacilitiesSectionProps> = ({ onOpenJoin }) => {
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
   const [activeTab, setActiveTab] = useState<string>('all');
+  const shouldReduceMotion = useReducedMotion();
 
   const categories = [
     { id: 'all', label: 'All Facilities' },
@@ -36,7 +37,7 @@ export const FacilitiesSection: React.FC<FacilitiesSectionProps> = ({ onOpenJoin
   });
 
   return (
-    <section id="facilities" className="py-24 sm:py-32 bg-[#08090d] relative overflow-hidden">
+    <section id="facilities" className="py-10 sm:py-16 md:py-20 bg-[#08090d] relative overflow-hidden">
       {/* Background radial gradient */}
       <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-cyan-600/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -60,101 +61,129 @@ export const FacilitiesSection: React.FC<FacilitiesSectionProps> = ({ onOpenJoin
             </p>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex flex-wrap gap-2 mt-6 md:mt-0">
-            {categories.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-cyan-400 text-black shadow-lg shadow-cyan-500/25'
-                    : 'bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-zinc-800'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          {/* Filter Pills with shared-layout indicator (Framer Motion layoutId) */}
+          <div className="flex flex-wrap gap-2 mt-6 md:mt-0 p-1 bg-zinc-900/80 border border-zinc-800 rounded-2xl">
+            {categories.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`relative px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer ${
+                    isActive ? 'text-black font-bold' : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="facilityTab"
+                      transition={{ type: 'spring', bounce: 0.18, duration: 0.4 }}
+                      className="absolute inset-0 bg-cyan-400 rounded-xl shadow-lg shadow-cyan-500/25"
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Facilities Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filteredFacilities.map((facility) => (
-            <div
-              key={facility.id}
-              className="bg-[#0e1017] rounded-2xl overflow-hidden border border-zinc-800/80 hover:border-cyan-500/40 transition-all duration-300 flex flex-col group shadow-xl hover:shadow-cyan-950/20"
-            >
-              {/* Image Container */}
-              <div className="relative h-56 sm:h-60 overflow-hidden bg-zinc-900">
-                <img
-                  src={facility.imageUrl}
-                  alt={facility.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 brightness-90 contrast-105"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0e1017] via-transparent to-black/20" />
-                
-                {/* Category Tag */}
-                <div className="absolute top-3 left-3 bg-zinc-900/90 backdrop-blur-md border border-zinc-700/80 px-2.5 py-1 rounded-lg text-[11px] font-bold text-cyan-300 uppercase tracking-wider">
-                  {facility.tag}
-                </div>
+        {/* Facilities Grid: Content grid cross-fades with a 200ms opacity swap and 8px movement */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: MOTION_TOKENS.ease.entrance }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+          >
+            {filteredFacilities.map((facility, index) => (
+              <motion.div
+                key={facility.id}
+                initial={
+                  shouldReduceMotion
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: MOTION_TOKENS.distance.sm }
+                }
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{
+                  duration: MOTION_TOKENS.duration.ui,
+                  delay: shouldReduceMotion ? 0 : Math.min(index, 6) * 0.08,
+                  ease: MOTION_TOKENS.ease.entrance,
+                }}
+                className="bg-[#0e1017] rounded-2xl overflow-hidden border border-zinc-800/80 hover:border-cyan-500/40 transition-colors duration-300 flex flex-col group shadow-xl hover:shadow-cyan-950/20"
+              >
+                {/* Image Container: on hover scale 1.04 inside overflow-hidden container (600ms), never scale the card */}
+                <div className="relative h-56 sm:h-60 overflow-hidden bg-zinc-900">
+                  <img
+                    src={facility.imageUrl}
+                    alt={facility.title}
+                    className="w-full h-full object-cover object-center transition-transform duration-600 ease-out [@media(hover:hover)]:group-hover:scale-104 brightness-90 contrast-105"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e1017] via-transparent to-black/20" />
+                  
+                  {/* Category Tag: fades in once when card reveals */}
+                  <motion.div
+                    initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.15 }}
+                    className="absolute top-3 left-3 bg-zinc-900/90 backdrop-blur-md border border-zinc-700/80 px-2.5 py-1 rounded-lg text-[11px] font-bold text-cyan-300 uppercase tracking-wider"
+                  >
+                    {facility.tag}
+                  </motion.div>
 
-                <button
-                  onClick={() => setSelectedFacility(facility)}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-zinc-900/80 backdrop-blur-md text-zinc-300 hover:text-white flex items-center justify-center border border-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Expand preview"
-                  aria-label={`View details of ${facility.title}`}
-                >
-                  <Maximize2 className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Content Body */}
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-1">
-                    {facility.category}
-                  </div>
-                  <h3 className="text-xl font-bold font-heading text-white group-hover:text-cyan-300 transition-colors">
-                    {facility.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
-                    {facility.description}
-                  </p>
-
-                  {/* Feature Checkpoints */}
-                  <div className="mt-4 pt-4 border-t border-zinc-800/80 space-y-2">
-                    {facility.features.map((feature, fIdx) => (
-                      <div key={fIdx} className="flex items-center gap-2 text-xs text-zinc-300">
-                        <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Bottom Action */}
-                <div className="mt-6 pt-4 border-t border-zinc-800/60 flex items-center justify-between">
                   <button
                     onClick={() => setSelectedFacility(facility)}
-                    className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 group-hover:underline"
+                    className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-zinc-900/80 backdrop-blur-md text-zinc-300 hover:text-white flex items-center justify-center border border-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    title="Expand preview"
+                    aria-label={`View details of ${facility.title}`}
                   >
-                    <span>View Specifications</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-
-                  <button
-                    onClick={() => onOpenJoin(facility.title)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-200 hover:text-black bg-zinc-900 hover:bg-cyan-400 border border-zinc-800 transition-all"
-                  >
-                    Inquire
+                    <Maximize2 className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+
+                {/* Content Body */}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-1">
+                      {facility.category}
+                    </div>
+                    <h3 className="text-xl font-bold font-heading text-white group-hover:text-cyan-300 transition-colors">
+                      {facility.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
+                      {facility.description}
+                    </p>
+
+                    {/* Feature Checkpoints */}
+                    <div className="mt-4 pt-4 border-t border-zinc-800/80 space-y-2">
+                      {facility.features.map((feature, fIdx) => (
+                        <div key={fIdx} className="flex items-center gap-2 text-xs text-zinc-300">
+                          <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Bottom Action: Exactly ONE button per card */}
+                  <div className="mt-6 pt-4 border-t border-zinc-800/60">
+                    <button
+                      onClick={() => setSelectedFacility(facility)}
+                      className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-cyan-400 hover:text-black bg-cyan-950/40 hover:bg-cyan-400 border border-cyan-500/30 transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+                    >
+                      <span>View Specifications</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
         {/* Bottom Banner Call to Action */}
         <div className="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#0e111a] via-zinc-900 to-[#0e111a] border border-cyan-500/20 flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -164,20 +193,29 @@ export const FacilitiesSection: React.FC<FacilitiesSectionProps> = ({ onOpenJoin
             </div>
             <div>
               <h4 className="text-base sm:text-lg font-bold text-white font-heading">
-                Want to see the equipment in person?
+                Ready to train with this equipment?
               </h4>
               <p className="text-xs sm:text-sm text-zinc-400">
-                Walk in anytime between 6:00 AM and 12:00 AM for a personal tour.
+                Open daily from 6:00 AM to 12:00 AM on West Canal Road, Faisalabad.
               </p>
             </div>
           </div>
 
-          <button
-            onClick={() => onOpenJoin('Tour Facility')}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 transition-all whitespace-nowrap"
-          >
-            SCHEDULE GYM TOUR
-          </button>
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <button
+              onClick={() => onOpenJoin('Facility Membership')}
+              className="flex-1 sm:flex-none px-6 py-3 rounded-xl text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 transition-all text-center cursor-pointer"
+            >
+              Join Now
+            </button>
+            <a
+              href={`tel:${GYM_INFO.phoneRaw}`}
+              className="flex-1 sm:flex-none px-5 py-3 rounded-xl text-sm font-semibold text-zinc-200 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all flex items-center justify-center gap-2 text-center"
+            >
+              <Phone className="w-4 h-4 text-cyan-400" />
+              <span>Call Now</span>
+            </a>
+          </div>
         </div>
 
       </div>
@@ -196,7 +234,7 @@ export const FacilitiesSection: React.FC<FacilitiesSectionProps> = ({ onOpenJoin
               <div className="absolute inset-0 bg-gradient-to-t from-[#0e111a] via-transparent to-black/40" />
               <button
                 onClick={() => setSelectedFacility(null)}
-                className="absolute top-4 right-4 bg-black/60 text-white rounded-full p-2 hover:bg-black/90 border border-zinc-700"
+                className="absolute top-4 right-4 bg-black/60 text-white rounded-full p-2 hover:bg-black/90 border border-zinc-700 cursor-pointer"
                 aria-label="Close"
               >
                 ✕
@@ -237,13 +275,13 @@ export const FacilitiesSection: React.FC<FacilitiesSectionProps> = ({ onOpenJoin
                     setSelectedFacility(null);
                     onOpenJoin(title);
                   }}
-                  className="flex-1 py-3 rounded-xl bg-cyan-400 text-black font-bold text-sm hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 transition-all"
+                  className="flex-1 py-3 rounded-xl bg-cyan-400 text-black font-bold text-sm hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 transition-all cursor-pointer"
                 >
                   Inquire About This Facility
                 </button>
                 <button
                   onClick={() => setSelectedFacility(null)}
-                  className="px-5 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-sm font-semibold text-zinc-300 hover:text-white"
+                  className="px-5 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-sm font-semibold text-zinc-300 hover:text-white cursor-pointer"
                 >
                   Close
                 </button>

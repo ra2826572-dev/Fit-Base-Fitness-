@@ -1,5 +1,6 @@
 import React from 'react';
-import { Phone, Navigation, Flame } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Phone, Navigation, Flame, MapPin } from 'lucide-react';
 import { GYM_INFO } from '../data/gymData';
 
 interface MobileStickyBarProps {
@@ -21,15 +22,15 @@ export const MobileStickyBar: React.FC<MobileStickyBarProps> = ({ onOpenJoin, on
           <span className="text-[11px] font-bold mt-0.5">CALL</span>
         </a>
 
-        {/* Directions Button */}
-        <button
-          onClick={onOpenDirections}
+        {/* Directions Page Link */}
+        <Link
+          to="/location"
           className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 active:bg-zinc-800 transition-colors min-h-[44px]"
           id="mobile-sticky-directions"
         >
           <Navigation className="w-4 h-4 text-cyan-400" />
-          <span className="text-[11px] font-bold mt-0.5">DIRECTIONS</span>
-        </button>
+          <span className="text-[11px] font-bold mt-0.5">LOCATION</span>
+        </Link>
 
         {/* Join Now CTA */}
         <button

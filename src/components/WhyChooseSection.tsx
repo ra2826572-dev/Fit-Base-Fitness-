@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { 
   Award, 
   Dumbbell, 
@@ -10,12 +11,15 @@ import {
   Sparkles
 } from 'lucide-react';
 import { WHY_CHOOSE_ITEMS } from '../data/gymData';
+import { MOTION_TOKENS } from '../utils/motionTokens';
 
 interface WhyChooseProps {
   onOpenJoin: () => void;
 }
 
 export const WhyChooseSection: React.FC<WhyChooseProps> = ({ onOpenJoin }) => {
+  const shouldReduceMotion = useReducedMotion();
+
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case 'Award':
@@ -41,8 +45,14 @@ export const WhyChooseSection: React.FC<WhyChooseProps> = ({ onOpenJoin }) => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        {/* Header - fade up on enter */}
+        <motion.div
+          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: MOTION_TOKENS.distance.md }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: MOTION_TOKENS.duration.ui, ease: MOTION_TOKENS.ease.entrance }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase mb-3">
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             THE FIT BASE ADVANTAGE
@@ -53,20 +63,32 @@ export const WhyChooseSection: React.FC<WhyChooseProps> = ({ onOpenJoin }) => {
           <p className="mt-4 text-sm sm:text-base text-zinc-400 max-w-xl mx-auto">
             Everything you need to train consistently, progress safely, and achieve tangible physical results in Faisalabad.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 6 Feature Cards Grid */}
+        {/* Cards Grid: Stagger 120ms and 24px upward movement when 20% visible */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {WHY_CHOOSE_ITEMS.map((item) => (
-            <div
+          {WHY_CHOOSE_ITEMS.map((item, index) => (
+            <motion.div
               key={item.id}
-              className="glass-panel glass-panel-hover rounded-2xl p-7 flex flex-col justify-between relative group border border-zinc-800/80"
+              initial={
+                shouldReduceMotion
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: MOTION_TOKENS.distance.md }
+              }
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{
+                duration: MOTION_TOKENS.duration.ui,
+                delay: shouldReduceMotion ? 0 : Math.min(index, MOTION_TOKENS.stagger.maxStaggeredItems) * MOTION_TOKENS.stagger.cards,
+                ease: MOTION_TOKENS.ease.entrance,
+              }}
+              className="glass-panel rounded-2xl p-7 flex flex-col justify-between relative group border border-zinc-800/80 transition-all duration-300 [@media(hover:hover)]:hover:-translate-y-1.5 [@media(hover:hover)]:hover:border-cyan-400/40"
               id={`why-choose-${item.id}`}
             >
               {/* Top Row: Icon & Metric Badge */}
               <div>
                 <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-900/90 border border-cyan-500/30 group-hover:border-cyan-400/70 flex items-center justify-center shadow-lg group-hover:shadow-cyan-500/20 transition-all">
+                  <div className="w-12 h-12 rounded-xl bg-zinc-900/90 border border-cyan-500/30 [@media(hover:hover)]:group-hover:border-cyan-400/70 flex items-center justify-center shadow-lg transition-transform duration-400 ease-out [@media(hover:hover)]:group-hover:scale-108">
                     {getIcon(item.iconName)}
                   </div>
                   <span className="text-[11px] font-semibold text-cyan-400 bg-cyan-950/40 border border-cyan-800/40 px-2.5 py-1 rounded-full">
@@ -90,19 +112,19 @@ export const WhyChooseSection: React.FC<WhyChooseProps> = ({ onOpenJoin }) => {
                 <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Standard at Fit Base</span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Bottom Callout */}
         <div className="mt-12 text-center">
           <p className="text-sm text-zinc-400">
-            Ready to experience the difference firsthand?
+            Ready to experience the difference?
             <button
               onClick={onOpenJoin}
               className="ml-2 text-cyan-400 hover:text-cyan-300 underline font-bold transition-colors cursor-pointer"
             >
-              Book your visit or join today &rarr;
+              Join Now &rarr;
             </button>
           </p>
         </div>

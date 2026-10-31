@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Users, ShieldCheck, ArrowRight, Sparkles } from 'lucide-react';
+import { Phone, Users, CheckCircle2, ArrowRight, Sparkles } from 'lucide-react';
 import { GYM_INFO } from '../data/gymData';
 
 interface TrainerCtaProps {
@@ -8,7 +8,7 @@ interface TrainerCtaProps {
 
 export const PersonalTrainingCta: React.FC<TrainerCtaProps> = ({ onOpenTrainer }) => {
   return (
-    <section id="trainers-cta" className="relative py-24 sm:py-32 overflow-hidden bg-[#08090d]">
+    <section id="trainers-cta" className="relative py-12 sm:py-16 md:py-20 overflow-hidden bg-[#08090d]">
       {/* Background Image with Deep Contrast Dark Vignette */}
       <div className="absolute inset-0 z-0">
         <img
@@ -41,10 +41,10 @@ export const PersonalTrainingCta: React.FC<TrainerCtaProps> = ({ onOpenTrainer }
           Whether you're new to fitness or ready to take your performance to the next level, professional guidance can help you train smarter and stay consistent.
         </p>
 
-        {/* Trust Badges */}
+        {/* Features without fake verification badges */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-zinc-300 font-medium">
           <span className="flex items-center gap-1.5 bg-zinc-900/80 px-3.5 py-1.5 rounded-lg border border-zinc-800">
-            <ShieldCheck className="w-4 h-4 text-cyan-400" />
+            <CheckCircle2 className="w-4 h-4 text-cyan-400" />
             Beginner-Friendly Onboarding
           </span>
           <span className="flex items-center gap-1.5 bg-zinc-900/80 px-3.5 py-1.5 rounded-lg border border-zinc-800">
@@ -53,14 +53,14 @@ export const PersonalTrainingCta: React.FC<TrainerCtaProps> = ({ onOpenTrainer }
           </span>
         </div>
 
-        {/* CTA Buttons */}
+        {/* CTA Buttons: Primary (Join Now) & Secondary (Call Now) */}
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={onOpenTrainer}
             className="w-full sm:w-auto px-8 py-4 rounded-xl text-sm sm:text-base font-extrabold text-black bg-gradient-to-r from-cyan-400 via-cyan-300 to-sky-400 shadow-xl shadow-cyan-500/30 hover:shadow-cyan-400/50 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group"
-            id="trainer-cta-talk-btn"
+            id="trainer-cta-join-btn"
           >
-            <span>TALK TO A TRAINER</span>
+            <span>JOIN NOW</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
 
@@ -69,8 +69,8 @@ export const PersonalTrainingCta: React.FC<TrainerCtaProps> = ({ onOpenTrainer }
             className="w-full sm:w-auto px-8 py-4 rounded-xl text-sm sm:text-base font-bold text-white bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/80 hover:border-cyan-500/50 shadow-lg backdrop-blur-md transition-all flex items-center justify-center gap-2.5"
             id="trainer-cta-phone-btn"
           >
-            <Phone className="w-5 h-5 text-cyan-400 animate-pulse" />
-            <span>CALL {GYM_INFO.phoneDisplay}</span>
+            <Phone className="w-5 h-5 text-cyan-400" />
+            <span>CALL NOW</span>
           </a>
         </div>
 

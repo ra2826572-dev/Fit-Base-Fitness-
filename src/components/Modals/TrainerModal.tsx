@@ -41,13 +41,13 @@ export const TrainerModal: React.FC<TrainerModalProps> = ({ isOpen, onClose }) =
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase mb-2">
                 <Users className="w-3.5 h-3.5 text-cyan-400" />
-                COACHING CONSULTATION
+                COACHING INQUIRY
               </div>
               <h3 className="text-2xl font-black font-heading text-white">
-                TALK TO A TRAINER
+                1-ON-1 COACHING INQUIRY
               </h3>
               <p className="text-xs text-zinc-400 mt-1">
-                Schedule a complimentary 1-on-1 discussion with a certified coach at Fit Base.
+                Inquire about customized personal training packages and coaching at Fit Base.
               </p>
             </div>
 

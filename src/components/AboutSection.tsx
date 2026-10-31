@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { 
   CheckCircle2, 
   Sparkles, 
@@ -6,18 +7,21 @@ import {
   Clock, 
   Dumbbell, 
   Users, 
-  ShieldCheck, 
   ArrowRight,
-  MapPin
+  MapPin,
+  Phone
 } from 'lucide-react';
 import { GYM_INFO } from '../data/gymData';
+import { MOTION_TOKENS } from '../utils/motionTokens';
 
 interface AboutSectionProps {
   onDiscoverClick: () => void;
   onOpenJoin: () => void;
 }
 
-export const AboutSection: React.FC<AboutSectionProps> = ({ onDiscoverClick, onOpenJoin }) => {
+export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenJoin }) => {
+  const shouldReduceMotion = useReducedMotion();
+
   const highlights = [
     {
       icon: Users,
@@ -40,14 +44,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onDiscoverClick, onO
       desc: 'Train on your own schedule with open doors from 6:00 AM until midnight every single day.',
     },
     {
-      icon: ShieldCheck,
+      icon: CheckCircle2,
       title: 'Supportive & Comfortable Atmosphere',
       desc: 'A positive culture welcoming to beginners and dedicated fitness enthusiasts alike.',
     },
   ];
 
   return (
-    <section id="about" className="py-24 sm:py-32 bg-[#08090d] relative overflow-hidden">
+    <section id="about" className="py-10 sm:py-16 md:py-20 bg-[#08090d] relative overflow-hidden">
       {/* Background ambient accents */}
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
@@ -55,13 +59,19 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onDiscoverClick, onO
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          {/* Left Side: Photography & Visual Experience Showcase */}
-          <div className="lg:col-span-6 relative">
+          {/* Left Side: Photography */}
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5, ease: MOTION_TOKENS.ease.entrance }}
+            className="lg:col-span-6 relative"
+          >
             <div className="relative rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl bg-zinc-900 group">
               <img
                 src={GYM_INFO.images.about}
                 alt="Inside Fit Base Fitness Center Faisalabad Training Floor"
-                className="w-full h-[420px] sm:h-[500px] object-cover object-center group-hover:scale-105 transition-transform duration-700 brightness-90 contrast-105"
+                className="w-full h-[420px] sm:h-[500px] object-cover object-center group-hover:scale-104 transition-transform duration-600 ease-out brightness-90 contrast-105"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#08090d] via-transparent to-black/30" />
@@ -97,10 +107,16 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onDiscoverClick, onO
               <MapPin className="w-4 h-4 text-cyan-400" />
               <span className="text-xs font-semibold text-zinc-200">Green Avenue, Canal Rd</span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Side: Copywriting & Content */}
-          <div className="lg:col-span-6 flex flex-col items-start">
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: MOTION_TOKENS.distance.md }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: MOTION_TOKENS.duration.ui, ease: MOTION_TOKENS.ease.entrance }}
+            className="lg:col-span-6 flex flex-col items-start"
+          >
             {/* Small Label */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/50 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
@@ -145,26 +161,28 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onDiscoverClick, onO
               })}
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons: Primary (Join Now) & Secondary (Call Now) */}
             <div className="mt-10 flex flex-wrap items-center gap-4 w-full sm:w-auto">
               <button
-                onClick={onDiscoverClick}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all flex items-center justify-center gap-2 group"
-                id="about-discover-btn"
+                onClick={onOpenJoin}
+                className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-sm font-bold text-black bg-cyan-400 hover:bg-cyan-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                id="about-join-btn"
               >
-                <span>DISCOVER FIT BASE</span>
+                <span>JOIN NOW</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
-              <button
-                onClick={onOpenJoin}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl text-sm font-semibold text-zinc-200 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all text-center"
+              <a
+                href={`tel:${GYM_INFO.phoneRaw}`}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl text-sm font-semibold text-zinc-200 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all flex items-center justify-center gap-2 text-center"
+                id="about-call-btn"
               >
-                Free Day Pass Inquiry
-              </button>
+                <Phone className="w-4 h-4 text-cyan-400" />
+                <span>Call Now</span>
+              </a>
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
       </div>

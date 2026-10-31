@@ -57,12 +57,12 @@ export const GYM_INFO = {
 export const STATS_DATA = [
   {
     value: '4.8★',
-    label: 'Google Rating',
-    subtext: 'Verified Member Score',
+    label: 'Member Rating',
+    subtext: 'Satisfaction Score',
   },
   {
     value: '85+',
-    label: 'Happy Reviews',
+    label: 'Member Reviews',
     subtext: '5-Star Experiences',
   },
   {
@@ -247,31 +247,31 @@ export const REVIEWS_DATA: Review[] = [
     id: 'rev-1',
     author: 'Eman Tahir',
     rating: 5,
-    date: 'Verified Member',
+    date: 'Recent Member',
     text: 'Supportive and professional coaches who helped me progress from being a beginner toward my strength goals.',
     role: 'Fit Base Member',
     initials: 'ET',
-    verified: true,
+    verified: false,
   },
   {
     id: 'rev-2',
     author: 'Alishba Minhas',
     rating: 5,
-    date: 'Verified Member',
+    date: 'Recent Member',
     text: 'Great equipment, cooperative staff and helpful instructors.',
     role: 'Fitness Enthusiast',
     initials: 'AM',
-    verified: true,
+    verified: false,
   },
   {
     id: 'rev-3',
     author: 'Nomi Jutt',
     rating: 5,
-    date: 'Verified Member',
+    date: 'Recent Member',
     text: 'One of the best gyms with a very good environment. Excellent cooling system and professional owner.',
     role: 'Strength Athlete',
     initials: 'NJ',
-    verified: true,
+    verified: false,
   },
 ];
 
